@@ -1,0 +1,14 @@
+<form method="get">
+    <input type="text" name="q" value="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+
+{% if books %}
+<ul>
+    {% for book in books %}
+    <li>{{ book.title }} by {% if book.author_name %}{{ book.author_name.0 }}{% else %}Unknown{% endif %}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No books found.</p>
+{% endif %}
