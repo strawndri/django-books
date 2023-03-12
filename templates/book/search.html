@@ -1,14 +1,29 @@
-<form method="get">
-    <input type="text" name="q" value="{{ query }}">
-    <button type="submit">Search</button>
+<form method="GET">
+    <input type="text" id="search-input" name="q" value="{{ query }}">
+    <!-- <button type="submit">Search</button> -->
 </form>
-
-{% if books %}
-<ul>
+<ul id="search-results">
     {% for book in books %}
-    <li>{{ book.title }} by {% if book.author_name %}{{ book.author_name.0 }}{% else %}Unknown{% endif %}</li>
+    <li>{{ book.title }}</li>
+    {% empty %}
+    <li>No results found.</li>
     {% endfor %}
 </ul>
-{% else %}
-<p>No books found.</p>
-{% endif %}
+
+<script>
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    
+    searchInput.addEventListener('keyup', () => {
+        const query = searchInput.value.trim();
+        if (query.length < 3) {
+            searchResults.innerHTML = '';
+            return;
+        }
+        fetch(`/search/?q=${encodeURIComponent(query)}`)
+        .then(response => response.text())
+        .then(html => {
+            searchResults.innerHTML = html;
+        });
+    });
+</script>
